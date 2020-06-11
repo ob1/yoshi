@@ -21,11 +21,11 @@ biLoggerFactory.addPublisher(async (eventParams: any, context: any) => {
   }
 
   try {
-    await fetch(
-      `https://frog.wix.com/${context.endpoint}?${querystring.stringify(
-        eventParams,
-      )}`,
-    );
+    const url = `https://frog.wix.com/${
+      context.endpoint
+    }?${querystring.stringify(eventParams)}`;
+    debug(`reporting ${url}`);
+    await fetch(url);
   } catch (error) {
     debug(error);
     // Swallow errors
