@@ -6,6 +6,8 @@ import { isTypescriptProject } from 'yoshi-helpers/build/queries';
 import isCI from 'is-ci';
 import fetch from 'node-fetch';
 
+const debug = require('debug')('yoshi:telemetry');
+
 // Create BI factory
 const biLoggerFactory = biLoggerClient.factory() as BiLoggerFactory<
   ReturnType<typeof getLoggerConf>
@@ -25,6 +27,7 @@ biLoggerFactory.addPublisher(async (eventParams: any, context: any) => {
       )}`,
     );
   } catch (error) {
+    debug(error);
     // Swallow errors
   }
 });
