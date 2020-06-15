@@ -363,7 +363,11 @@ export default class DevEnvironment {
     if (serverProcess) {
       await serverProcess.initialize();
 
-      const serverUrls = prepareUrls('http', host, serverProcess.port);
+      const serverUrls = prepareUrls(
+        webpackDevServer?.https ? 'https' : 'http',
+        host,
+        serverProcess.port,
+      );
 
       this.store.setState({
         AppServer: {
