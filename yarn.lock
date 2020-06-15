@@ -22004,7 +22004,7 @@ react-custom-scroll@^3.2.1:
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/react-custom-scroll/-/react-custom-scroll-3.2.2.tgz#c22dab0c3eab0138cb8d8afd1565c835feb01b6a"
   integrity sha1-wi2rDD6rATjLjYr9FWXINf6wG2o=
 
-react-dev-utils@7.0.5:
+react-dev-utils@7.0.5, react-dev-utils@^7.0.5:
   version "7.0.5"
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/react-dev-utils/-/react-dev-utils-7.0.5.tgz#cb95375d01ae71ca27b3c7616006ef7a77d14e8e"
   integrity sha1-y5U3XQGuccons8dhYAbvenfRTo4=
@@ -25505,6 +25505,11 @@ tinytim@0.1.1:
   version "0.1.1"
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/tinytim/-/tinytim-0.1.1.tgz#c968a1e5559ad9553224ef7627bab34e3caef8a8"
   integrity sha1-yWih5VWa2VUyJO92J7qzTjyu+Kg=
+
+tinyurl@^1.1.6:
+  version "1.1.6"
+  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/tinyurl/-/tinyurl-1.1.6.tgz#ebaf5de3d3947e14def7b7298c86330339bcb78e"
+  integrity sha1-669d49OUfhTe97cpjIYzAzm8t44=
 
 tlds@^1.187.0, tlds@^1.203.0:
   version "1.207.0"
