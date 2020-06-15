@@ -25064,6 +25064,14 @@ supports-color@^7.0.0, supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+supports-hyperlinks@^2.0.0:
+  version "2.1.0"
+  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/supports-hyperlinks/-/supports-hyperlinks-2.1.0.tgz#f663df252af5f37c5d49bbd7eeefa9e0b9e59e47"
+  integrity sha1-9mPfJSr183xdSbvX7u+p4Lnlnkc=
+  dependencies:
+    has-flag "^4.0.0"
+    supports-color "^7.0.0"
+
 surge-github-autorelease@^1.0.23:
   version "1.0.44"
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/surge-github-autorelease/-/surge-github-autorelease-1.0.44.tgz#214ca55b05de8b208a386bed2ef938ced6c55908"
@@ -25303,6 +25311,14 @@ term-size@^2.1.0:
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/term-size/-/term-size-2.2.0.tgz#1f16adedfe9bdc18800e1776821734086fcc6753"
   integrity sha1-Hxat7f6b3BiADhd2ghc0CG/MZ1M=
 
+terminal-link@^2.1.1:
+  version "2.1.1"
+  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/terminal-link/-/terminal-link-2.1.1.tgz#14a64a27ab3c0df933ea546fba55f2d078edc994"
+  integrity sha1-FKZKJ6s8Dfkz6lRvulXy0HjtyZQ=
+  dependencies:
+    ansi-escapes "^4.2.1"
+    supports-hyperlinks "^2.0.0"
+
 terminate@^2.1.0:
   version "2.1.2"
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/terminate/-/terminate-2.1.2.tgz#3c78b9dc7559cb66af215c622cce906d415e2ef9"
@@ -25505,11 +25521,6 @@ tinytim@0.1.1:
   version "0.1.1"
   resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/tinytim/-/tinytim-0.1.1.tgz#c968a1e5559ad9553224ef7627bab34e3caef8a8"
   integrity sha1-yWih5VWa2VUyJO92J7qzTjyu+Kg=
-
-tinyurl@^1.1.6:
-  version "1.1.6"
-  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/tinyurl/-/tinyurl-1.1.6.tgz#ebaf5de3d3947e14def7b7298c86330339bcb78e"
-  integrity sha1-669d49OUfhTe97cpjIYzAzm8t44=
 
 tlds@^1.187.0, tlds@^1.203.0:
   version "1.207.0"

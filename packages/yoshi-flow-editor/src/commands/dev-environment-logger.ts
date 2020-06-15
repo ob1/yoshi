@@ -12,21 +12,26 @@ import {
   shouldClearConsole,
   getProcessName,
 } from 'yoshi-common/build/dev-environment-logger';
-import tinyurl from 'tinyurl';
-import { FlowEditorModel } from '../model';
+import terminalLink from 'terminal-link';
+import { FlowEditorModel, URLsConfig } from '../model';
 
-const cache = new Map();
-const shortenUrl = async (url: string) => {
-  if (!cache.has(url)) {
-    try {
-      cache.set(url, await tinyurl.shorten(url));
-    } catch (e) {
-      console.log("Can't make development url short.", e);
-      return url;
-    }
-  }
-  return cache.get(url);
+type URLsConfigItem = keyof URLsConfig;
+
+const envLabelsMap: Record<URLsConfigItem, string> = {
+  viewerUrl: 'Viewer 🖼',
+  editorUrl: 'Editor 🎨',
+  appBuilderUrl: 'App Builder 👷‍♂️',
 };
+
+const getEnvLabel = (env: URLsConfigItem): string => {
+  return envLabelsMap[env] || env;
+};
+
+const normalizeUrlForTerminal = (url: string): string =>
+  url
+    .replace(/\{/g, encodeURIComponent('{'))
+    .replace(/\}/g, encodeURIComponent('}'))
+    .replace(/"/g, encodeURIComponent('"'));
 
 const logUrls = ({
   urls,
@@ -38,53 +43,65 @@ const logUrls = ({
   processType: ProcessType;
 }) => {
   if (processType === 'AppServer') {
-    logEditorUrls({ urls, model });
+    logServingApps({ urls, model });
   } else if (processType === 'DevServer') {
-    logViewerUrls({ urls, model });
+    logStatics({ urls, model });
   }
 };
 
-const logEditorUrls = ({
+const logServingApps = ({
   urls,
   model,
 }: {
   urls?: Urls;
   model: FlowEditorModel;
 }) => {
-  console.log(`Editor urls:`);
+  console.log(`${chalk.greenBright.bold('Serving apps')}:`);
 
   model.components.map((component) => {
-    console.log(`${chalk.cyan.bold(component.name)}`);
+    console.log(`  ${chalk.cyan.bold(component.name)}`);
     console.log(
-      `  ${chalk.bold('Widget:')}            ${
+      `    ${chalk.bold('Widget:')}            ${
         urls?.localUrlForTerminal
       }editor/${component.name}`,
     );
     console.log(
-      `  ${chalk.bold('Settings panel:')}    ${
+      `    ${chalk.bold('Settings panel:')}    ${
         urls?.localUrlForTerminal
       }settings/${component.name}`,
     );
   });
 };
 
-const logViewerUrls = ({
+const logStatics = ({
   urls,
   model,
 }: {
   urls?: Urls;
   model: FlowEditorModel;
 }) => {
-  console.log('Viewer urls:');
+  console.log(`${chalk.greenBright.bold('Static assets:')}`);
 
   model.components.map((component) => {
-    console.log(`${chalk.cyan.bold(component.name)}`);
+    console.log(`  ${chalk.cyan.bold(component.name)}`);
     console.log(
-      `  ${chalk.bold('Widget:')}            ${urls?.localUrlForTerminal}${
+      `    ${chalk.bold('Widget:')}            ${urls?.localUrlForTerminal}${
         component.name
       }ViewerWidget.bundle.js`,
     );
   });
+
+  console.log(
+    `  ${chalk.bold.blue('Viewer Script:')}       ${
+      urls?.localUrlForTerminal
+    }viewerScript.bundle.js`,
+  );
+
+  console.log(
+    `  ${chalk.bold.blue('Editor Script:')}       ${
+      urls?.localUrlForTerminal
+    }editorScript.bundle.js`,
+  );
 
   console.log();
 };
@@ -134,7 +151,7 @@ const logStateErrorsOrWarnings = (state: State) => {
   }
 };
 
-export default (model: FlowEditorModel, startUrl: Array<string>) => ({
+export default (model: FlowEditorModel, startUrl: URLsConfig) => ({
   state,
   appName,
 }: {
@@ -155,27 +172,51 @@ export default (model: FlowEditorModel, startUrl: Array<string>) => ({
   if (isCompiled) {
     console.log(chalk.green('Compiled successfully!'));
 
-    console.log(`Your bundles for viewer and apps for editor are ready!`);
+    console.log(`Your bundles for viewer and editor environment are ready! 🚀`);
     console.log('');
-  } else {
-    console.log(chalk.bold('Compiling...'));
-  }
 
-  for (const processTypeKey in state) {
-    const processType = processTypeKey as ProcessType;
-    const processState = state[processType];
+    for (const processTypeKey in state) {
+      const processType = processTypeKey as ProcessType;
+      const processState = state[processType];
 
-    processState &&
-      logProcessState({ model, processType, appName }, processState);
-  }
-
-  Promise.all(startUrl.map(shortenUrl)).then((urls) => {
-    if (isCompiled) {
-      console.log('Following urls will be opened with local overrides:\n');
-      urls.map((url: string) => {
-        console.log(`${chalk.cyan.underline(url)}`);
-        console.log();
-      });
+      processState &&
+        logProcessState({ model, processType, appName }, processState);
     }
-  });
+
+    console.log(
+      chalk.whiteBright(
+        '\n\nFollowing urls will be opened with local overrides:\n',
+      ),
+    );
+    const linksToLog: Array<string> = [];
+
+    Object.keys(startUrl).forEach((env) => {
+      const targetUrl = startUrl[env as URLsConfigItem];
+      if (targetUrl) {
+        const label = getEnvLabel(env as URLsConfigItem);
+        const normalizedUrl = normalizeUrlForTerminal(targetUrl);
+        const linkToLog = terminalLink(
+          chalk.cyan.bold(label),
+          normalizeUrlForTerminal(targetUrl as string),
+          {
+            fallback() {
+              return `${label}  ${chalk.cyan.italic(normalizedUrl)}`;
+            },
+          },
+        );
+        linksToLog.push(linkToLog);
+      }
+    });
+
+    if (!terminalLink.isSupported) {
+      console.log(
+        chalk.gray.italic(
+          "Oh, seems like your terminal doesn't support hyperlinks. Please consider moving to iTerm2 or another modern terminal: https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda\n",
+        ),
+      );
+      console.log(`${linksToLog.join('\n\n')}\n`);
+      return;
+    }
+    console.log(`  ${linksToLog.join('             ')}\n`);
+  }
 };
