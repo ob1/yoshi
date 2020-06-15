@@ -20,7 +20,7 @@ import {
 import { STATICS_DIR, SERVER_ENTRY, SRC_DIR } from 'yoshi-config/build/paths';
 import ManifestPlugin from 'yoshi-common/build/manifest-webpack-plugin';
 import { isObject } from 'lodash';
-import SentryCliPlugin from '@sentry/webpack-plugin';
+import SentryWebpackPlugin from '@sentry/webpack-plugin';
 import { PackageGraphNode } from './load-package-graph';
 import { isThunderboltElementModule, isThunderboltAppModule } from './utils';
 
@@ -119,9 +119,8 @@ export function createClientWebpackConfig(
   if (isThunderboltAppModule(pkg)) {
     if (inMasterTeamCity()) {
       clientConfig.plugins!.push(
-        new SentryCliPlugin({
-          include: pkg.location,
-          ignore: ['node_modules', 'dist'],
+        new SentryWebpackPlugin({
+          include: path.join(pkg.location, STATICS_DIR),
           release: process.env.ARTIFACT_VERSION,
         }),
       );
