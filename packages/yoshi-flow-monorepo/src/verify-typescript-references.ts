@@ -19,7 +19,7 @@ export default async function verifyTypeScriptReferences({
         .sort()
         .map((relativePath) => ({ path: relativePath }));
 
-      const originalReferencesSorted = [...tsconfig.references]
+      const originalReferencesSorted = [...(tsconfig.references || [])]
         .map(({ path }) => path)
         .sort()
         .map((path) => ({ path }));
