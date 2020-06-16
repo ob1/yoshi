@@ -22,7 +22,7 @@
     "types.d.ts"
   ],
   "dependencies": {
-    "@babel/core": "7.9.6",
+    "@babel/core": "7.10.2",
     "yoshi-common": "4.97.0",
     "yoshi-config": "4.89.0",
     "yoshi-flow-app": "4.97.0",
