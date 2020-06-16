@@ -20,9 +20,7 @@ export default async function verifyTypeScriptReferences({
         .map((relativePath) => ({ path: relativePath }));
 
       const originalReferencesSorted = [...(tsconfig.references || [])]
-        .map(({ path }) => path)
-        .sort()
-        .map((path) => ({ path }));
+sort((a,b) => a.path > b.path ? 1 : -1)
 
       // Only update `tsconfig` and show a message if an update is needed
       if (isEqual(references, originalReferencesSorted)) {
